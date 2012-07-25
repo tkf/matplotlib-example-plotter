@@ -35,12 +35,22 @@ def changedir(path):
         os.chdir(save)
 
 
+@contextmanager
+def restoremplrc():
+    save = matplotlib.rcParams.copy()
+    try:
+        yield
+    finally:
+        matplotlib.rcParams.clear()
+        matplotlib.rcParams.update(save)
+
+
 def exportfigs(filename):
     dirname = os.path.dirname(filename)
     basename = os.path.basename(filename)
 
     print "Plotting {0}...".format(basename),
-    with changedir(dirname):
+    with changedir(dirname), restoremplrc():
         execfile(basename, {})
     print "Done"
 
