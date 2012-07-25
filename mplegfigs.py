@@ -82,7 +82,8 @@ def main(args=None):
     parser.add_argument(
         '--eg-dir', default='matplotlib/examples')
     parser.add_argument(
-        '--ignore', action='append', default=['*/user_interfaces/*'])
+        '--ignore', action='append',
+        default=['*/user_interfaces/*', '*_qt*'])
     parser.add_argument(
         '--build-dir', default='build')
     ns = parser.parse_args(args)
