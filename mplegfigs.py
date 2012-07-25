@@ -63,13 +63,16 @@ def mplegfigs(eg_dir, build_dir, ignore):
              if not any(fnmatch.fnmatch(f, p) for p in ignore)]
     names = [path_to_name(os.path.relpath(f, eg_dir)) for f in files]
 
+    copies = []
     for (orig, na) in zip(files, names):
         basename = os.path.basename(orig)
         out_dir = os.path.join(build_dir, na)
         new_file = os.path.join(out_dir, basename)
         mkdirp(out_dir)
         shutil.copyfile(orig, new_file)
+        copies.append(new_file)
 
+    for new_file in copies:
         try:
             exportfigs(new_file)
         except (Exception, SystemExit) as e:
