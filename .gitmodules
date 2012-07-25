@@ -1,0 +1,3 @@
+[submodule "matplotlib"]
+	path = matplotlib
+	url = git://github.com/matplotlib/matplotlib.git
