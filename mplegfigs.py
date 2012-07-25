@@ -45,7 +45,7 @@ def exportfigs(filename):
     print "Done"
 
     fignums = pyplot.get_fignums()
-    figpaths = map(os.path.join(dirname, "{0}.pdf").format, fignums)
+    figpaths = map("{0}{{0}}.pdf".format(dirname).format, fignums)
     for (i, path) in zip(fignums, figpaths):
         fig = pyplot.figure(i)
         fig.savefig(path)
