@@ -71,7 +71,7 @@ def mplegfigs(eg_dir, build_dir):
 
         try:
             exportfigs(new_file)
-        except Exception as e:
+        except (Exception, SystemExit) as e:
             print "Got error: {0}".format(e)
 
 
