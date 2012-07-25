@@ -58,8 +58,9 @@ def mkdirp(path):
         os.makedirs(path)
 
 
-def mplegfigs(eg_dir, build_dir):
-    files = globtree(eg_dir, '*.py')
+def mplegfigs(eg_dir, build_dir, ignore):
+    files = [f for f in globtree(eg_dir, '*.py')
+             if not any(fnmatch.fnmatch(f, p) for p in ignore)]
     names = [path_to_name(os.path.relpath(f, eg_dir)) for f in files]
 
     for (orig, na) in zip(files, names):
@@ -80,6 +81,8 @@ def main(args=None):
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
         '--eg-dir', default='matplotlib/examples')
+    parser.add_argument(
+        '--ignore', action='append', default=['*/user_interfaces/*'])
     parser.add_argument(
         '--build-dir', default='build')
     ns = parser.parse_args(args)
