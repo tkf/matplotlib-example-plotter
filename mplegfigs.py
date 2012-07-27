@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 import fnmatch
 from contextlib import contextmanager
@@ -87,8 +88,12 @@ def mplegfigs(prefix, eg_dir, build_dir, ignore):
         try:
             exportfigs(new_file)
         except (Exception, SystemExit) as e:
+            # Newline for "Plotting ..." line
+            print
             # "Safe" print
             print "Got error: {0}".format(e).encode('UTF-8', errors='replace')
+        sys.stdout.flush()
+        sys.stderr.flush()
 
 
 def main(args=None):
