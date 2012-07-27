@@ -105,7 +105,7 @@ def main(args=None):
         '--eg-dir', default='matplotlib/examples')
     parser.add_argument(
         '--ignore', action='append',
-        default=['*/user_interfaces/*', '*_qt*'])
+        default=['*/user_interfaces/*', '*_qt*', '*/print_stdout.py'])
     parser.add_argument(
         '--build-dir', default='build')
     ns = parser.parse_args(args)
