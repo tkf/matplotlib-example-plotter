@@ -62,20 +62,31 @@
 (defun hme:pdf-to-py (pdf-path)
   (let* ((dir (replace-regexp-in-string "-[0-9]+\\.pdf$" "/" pdf-path))
          (file-glob (concat dir "*.py")))
-    file-glob))
+    (car (file-expand-wildcards file-glob t))))
 
 (defun hme:open-code (pdf-path)
   "Given a PDF-PATH, open associated Python file."
-  (find-file (hme:pdf-to-py pdf-path) t))
+  (find-file (hme:pdf-to-py pdf-path)))
+
+(defvar hme:show-file-d nil)
+
+(defun hme:deferred-display-file (file)
+  (when hme:show-file-d
+    (deferred:cancel hme:show-file-d))
+  (setq hme:show-file-d
+        (lexical-let ((file file))
+          (deferred:next
+            (lambda ()
+              (display-buffer (find-file-noselect file)))))))
 
 (defun hme:preview-action (pdf-path)
+  (hme:deferred-display-file (hme:pdf-to-py pdf-path))
   ;; It seems `anything-books-command' uses `persistent-action' to
   ;; show PDF images.  That's why I need to call `abks:preview-action'
   ;; here.  Consequently, source file is always shown after the movement
   ;; of the selection.
   ;; See: defadvice `abks:anything' on `anything-move-selection-common'.
-  (abks:preview-action pdf-path)
-  (find-file (hme:pdf-to-py pdf-path) t))
+  (abks:preview-action pdf-path))
 
 (defun hme:view-examples (command)
   (let ((abks:books-dir hme:data-directory))
