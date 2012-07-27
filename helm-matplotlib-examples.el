@@ -93,11 +93,13 @@
     (flet ((anything-books-source-get () (hme:source-get)))
       (funcall command))))
 
+;;;###autoload
 (defun helm-matplotlib-examples ()
   "Choose matplotlib examples."
   (interactive)
   (hme:view-examples #'helm-books-command))
 
+;;;###autoload
 (defun anything-matplotlib-examples ()
   "Choose matplotlib examples."
   (interactive)
