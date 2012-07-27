@@ -29,6 +29,13 @@
 
 (require 'anything-books)
 
+;; (defmacro hme:aif (test-form then-form &rest else-forms)
+;;   "Anaphoric IF.  Adapted from `e2wm:aif'."
+;;   (declare (debug (form form &rest form))
+;;            (indent 2))
+;;   `(let ((it ,test-form))
+;;      (if it ,then-form ,@else-forms)))
+
 (defmacro hme:aand (test &rest rest)
   "Anaphoric AND.  Adapted from `e2wm:aand'."
   (declare (debug (form &rest form)))
@@ -42,17 +49,29 @@
   "Directories where PDF figures are stored."
   :group 'hme)
 
+(defvar hme:actions
+  '(("Open code" . hme:open-code)))
+
+(defun hme:open-code (pdf-path)
+  "Given a PDF-PATH, open associated Python file."
+  (let* ((dir (replace-regexp-in-string "-[0-9]+\\.pdf$" "/" pdf-path))
+         (file-glob (concat dir "*.py")))
+    (find-file file-glob t)))
+
+(defun hme:view-examples (command)
+  (let ((abks:books-dir hme:data-directory)
+        (anything-books-actions (append hme:actions anything-books-actions)))
+    (funcall command)))
+
 (defun helm-matplotlib-examples ()
   "Choose matplotlib examples."
   (interactive)
-  (let ((abks:books-dir hme:data-directory))
-    (helm-books-command)))
+  (hme:view-examples #'helm-books-command))
 
 (defun anything-matplotlib-examples ()
   "Choose matplotlib examples."
   (interactive)
-  (let ((abks:books-dir hme:data-directory))
-    (anything-books-command)))
+  (hme:view-examples #'anything-books-command))
 
 (provide 'helm-matplotlib-examples)
 
