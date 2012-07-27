@@ -52,16 +52,35 @@
 (defvar hme:actions
   '(("Open code" . hme:open-code)))
 
-(defun hme:open-code (pdf-path)
-  "Given a PDF-PATH, open associated Python file."
+(defun hme:source-get ()
+  `((name . "PDF Books")
+    (candidates . abks:collect-files)
+    (action . ,(append hme:actions anything-books-actions))
+    (migemo)
+    (persistent-action . hme:preview-action)))
+
+(defun hme:pdf-to-py (pdf-path)
   (let* ((dir (replace-regexp-in-string "-[0-9]+\\.pdf$" "/" pdf-path))
          (file-glob (concat dir "*.py")))
-    (find-file file-glob t)))
+    file-glob))
+
+(defun hme:open-code (pdf-path)
+  "Given a PDF-PATH, open associated Python file."
+  (find-file (hme:pdf-to-py pdf-path) t))
+
+(defun hme:preview-action (pdf-path)
+  ;; It seems `anything-books-command' uses `persistent-action' to
+  ;; show PDF images.  That's why I need to call `abks:preview-action'
+  ;; here.  Consequently, source file is always shown after the movement
+  ;; of the selection.
+  ;; See: defadvice `abks:anything' on `anything-move-selection-common'.
+  (abks:preview-action pdf-path)
+  (find-file (hme:pdf-to-py pdf-path) t))
 
 (defun hme:view-examples (command)
-  (let ((abks:books-dir hme:data-directory)
-        (anything-books-actions (append hme:actions anything-books-actions)))
-    (funcall command)))
+  (let ((abks:books-dir hme:data-directory))
+    (flet ((anything-books-source-get () (hme:source-get)))
+      (funcall command))))
 
 (defun helm-matplotlib-examples ()
   "Choose matplotlib examples."
