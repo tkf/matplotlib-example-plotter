@@ -87,7 +87,8 @@ def mplegfigs(prefix, eg_dir, build_dir, ignore):
         try:
             exportfigs(new_file)
         except (Exception, SystemExit) as e:
-            print "Got error: {0}".format(e)
+            # "Safe" print
+            print "Got error: {0}".format(e).encode('UTF-8', errors='replace')
 
 
 def main(args=None):
